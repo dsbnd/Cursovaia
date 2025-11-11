@@ -11,7 +11,7 @@ public class ArtishokApplication {
 
 		System.out.println("Делаю изменения, сучка!");
 		// привет всем!
-		System.out.println("я первая сучка");
+		System.out.println("я первая сучк");
 
 		SpringApplication.run(ArtishokApplication.class, args);
 	}
