@@ -8,8 +8,11 @@ public class ArtishokApplication {
 
 	public static void main(String[] args) {
 		System.out.println("Hello suchka");
+
 		System.out.println("Делаю изменения, сучка!");
 		// привет всем!
+		System.out.println("я первая сучка");
+
 		SpringApplication.run(ArtishokApplication.class, args);
 	}
 
