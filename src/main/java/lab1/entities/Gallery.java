@@ -4,6 +4,9 @@ package lab1.entities;
 import jakarta.persistence.*;
 import lab1.entities.enums.GalleryStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "gallery")
 public class Gallery {
@@ -26,6 +29,7 @@ public class Gallery {
 
     @Column(name = "logo_url")
     private String logoUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private GalleryStatus status = GalleryStatus.PENDING;
@@ -33,5 +37,9 @@ public class Gallery {
     @Column(name = "admin_comment")
     private String adminComment;
 
-//
+    @OneToMany(mappedBy = "gallery", cascade = CascadeType.ALL)
+    private List<GalleryOwnership> ownerships = new ArrayList<>();
+
+    @OneToMany(mappedBy = "gallery", cascade = CascadeType.ALL)
+    private List<ExhibitionEvent> exhibitions = new ArrayList<>();
 }
