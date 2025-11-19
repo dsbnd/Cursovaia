@@ -3,12 +3,16 @@ package lab1.entities;
 
 import jakarta.persistence.*;
 import lab1.entities.enums.GalleryStatus;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "gallery")
+@Getter
+@Setter
 public class Gallery {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
