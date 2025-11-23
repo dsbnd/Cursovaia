@@ -21,7 +21,7 @@ public class GalleryOwnership {
     @Column(name= "is_primary", nullable=false)
     private Boolean isPrimary = false;
     @Column(name= "verification_code", nullable=false)
-    private Integer verificationCode;
+    private String verificationCode;
     @Column(name = "code_expiry")
     private LocalDateTime codeExpiry;
     @Column(name = "created_at")

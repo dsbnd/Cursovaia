@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import artishok.entities.enums.ExhibitionStatus;
 
@@ -38,8 +39,7 @@ public class ExhibitionEvent {
     @Column(nullable = false)
     private ExhibitionStatus status = ExhibitionStatus.DRAFT;
 
-    @OneToMany(mappedBy = "exhibitionEvent", cascade = CascadeType.ALL)
-    private List<ExhibitionHallMap> hallMaps = new ArrayList<>();
+
 
 
 }

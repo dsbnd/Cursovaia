@@ -42,9 +42,4 @@ public class Gallery {
     @Column(name = "admin_comment")
     private String adminComment;
 
-    @OneToMany(mappedBy = "gallery", cascade = CascadeType.ALL)
-    private List<GalleryOwnership> ownerships = new ArrayList<>();
-
-    @OneToMany(mappedBy = "gallery", cascade = CascadeType.ALL)
-    private List<ExhibitionEvent> exhibitions = new ArrayList<>();
 }

@@ -25,7 +25,6 @@ public class ExhibitionHallMap {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "exhibitionHallMap", cascade = CascadeType.ALL)
-    private List<ExhibitionStand> stands = new ArrayList<>();
+
 
 }

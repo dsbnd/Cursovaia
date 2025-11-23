@@ -46,7 +46,6 @@ public class ExhibitionStand {
     @Column(nullable = false)
     private StandStatus status = StandStatus.AVAILABLE;
 
-    @OneToMany(mappedBy = "exhibitionStand")
-    private List<Booking> bookings = new ArrayList<>();
+
 
 }
