@@ -29,5 +29,7 @@ public class ArtworkController {
 		System.out.println("Списки произведений отправлены");
 		return ResponseEntity.ok(artworks);
 	}
+	
+	
 
 }

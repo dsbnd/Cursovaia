@@ -11,6 +11,18 @@ BEGIN
     ALTER TABLE gallery_ownership ALTER COLUMN gallery_id TYPE BIGINT;
     ALTER TABLE gallery_ownership ALTER COLUMN owner_id TYPE BIGINT;
     ALTER TABLE user_activity_log ALTER COLUMN user_id TYPE BIGINT;
+    
+    ALTER TABLE admin_audit_log ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE admin_audit_log ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE bookings ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE bookings ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE exhibition_event ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE exhibition_hall_map ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE exhibition_stand ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE gallery_ownership ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE gallery_ownership ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE user_activity_log ALTER COLUMN id TYPE BIGINT;
+    ALTER TABLE gallery ALTER COLUMN id TYPE BIGINT;
 
     RAISE NOTICE 'Все ID поля изменены на BIGINT';
 END $$;

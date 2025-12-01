@@ -19,7 +19,8 @@ CREATE TABLE "users" (
    bio TEXT,
    avatar_url VARCHAR(500)
 );
-
+ALTER TABLE users ADD COLUMN is_active BOOLEAN DEFAULT true;
+ALTER TABLE users ADD COLUMN registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
 -- Таблица галерей
 CREATE TABLE gallery (

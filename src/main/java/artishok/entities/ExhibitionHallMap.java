@@ -25,6 +25,38 @@ public class ExhibitionHallMap {
     @Column(nullable = false)
     private String name;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public ExhibitionEvent getExhibitionEvent() {
+		return exhibitionEvent;
+	}
+
+	public void setExhibitionEvent(ExhibitionEvent exhibitionEvent) {
+		this.exhibitionEvent = exhibitionEvent;
+	}
+
+	public String getMapImageUrl() {
+		return mapImageUrl;
+	}
+
+	public void setMapImageUrl(String mapImageUrl) {
+		this.mapImageUrl = mapImageUrl;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 
 
 }

@@ -2,6 +2,12 @@ package artishok.entities;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
+import org.hibernate.type.SqlTypes;
+import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
+
 import artishok.entities.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,8 +34,8 @@ public class User {
 	@Column(name = "full_name")
 	private String fullName;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "role")
+	@Column(name = "role", columnDefinition = "user_role")
+	@JdbcTypeCode(SqlTypes.NAMED_ENUM)
 	private UserRole role;
 
 	@Column(name = "phone_number")
