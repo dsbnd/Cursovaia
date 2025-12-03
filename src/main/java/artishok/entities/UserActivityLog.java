@@ -10,7 +10,6 @@ public class UserActivityLog {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// Только когда явно обращаемся - тогда загружается
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;

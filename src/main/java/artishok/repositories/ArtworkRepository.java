@@ -1,43 +1,50 @@
 package artishok.repositories;
 
-import java.util.List;
+import artishok.entities.Artwork;
+import artishok.entities.Booking;
+import artishok.entities.enums.ArtworkStatus;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import artishok.entities.Artwork;
-import artishok.entities.enums.ArtworkStatus;
+import java.util.List;
 
 @Repository
 public interface ArtworkRepository extends JpaRepository<Artwork, Long> {
+
+	List<Artwork> findByBooking(Booking booking);
+
 	List<Artwork> findByBookingId(Long bookingId);
 
 	List<Artwork> findByStatus(ArtworkStatus status);
 
-	// Для художника: его произведения (прецедент 3.1.3.9)
 	@Query("SELECT a FROM Artwork a WHERE a.booking.artist.id = :artistId")
 	List<Artwork> findByArtistId(@Param("artistId") Long artistId);
 
-	// Для выставки: все произведения на выставке
-	@Query("SELECT a FROM Artwork a "
-			+ "WHERE a.booking.exhibitionStand.exhibitionHallMap.exhibitionEvent.id = :eventId "
-			+ "AND a.status = 'PUBLISHED'")
+	@Query("SELECT a FROM Artwork a WHERE a.booking.artist.id = :artistId AND a.status = :status")
+	List<Artwork> findByArtistIdAndStatus(@Param("artistId") Long artistId, @Param("status") ArtworkStatus status);
+
+	List<Artwork> findByTitleContainingIgnoreCase(String title);
+
+	List<Artwork> findByTechniqueContainingIgnoreCase(String technique);
+
+	List<Artwork> findByCreationYear(Integer year);
+
+	List<Artwork> findByCreationYearBetween(Integer startYear, Integer endYear);
+
+	List<Artwork> findByStatusOrderByCreationYearDesc(ArtworkStatus status);
+
+	@Query("SELECT a FROM Artwork a WHERE a.booking.exhibitionStand.exhibitionHallMap.exhibitionEvent.id = :eventId")
 	List<Artwork> findByExhibitionEventId(@Param("eventId") Long eventId);
 
-	// Для модерации контента администратором (прецедент 3.1.1.7)
-	@Query("SELECT a FROM Artwork a WHERE a.status = 'DRAFT' ")
-	List<Artwork> findUnpublishedArtworks();
+	@Query("SELECT a FROM Artwork a WHERE a.booking.exhibitionStand.exhibitionHallMap.exhibitionEvent.gallery.id = :galleryId")
+	List<Artwork> findByGalleryId(@Param("galleryId") Long galleryId);
 
-	// Поиск по названию или описанию
-	@Query("SELECT a FROM Artwork a WHERE "
-			+ "(:search IS NULL OR LOWER(a.title) LIKE LOWER(CONCAT('%', :search, '%')) "
-			+ "OR LOWER(a.description) LIKE LOWER(CONCAT('%', :search, '%'))) " + "AND a.status = 'PUBLISHED'")
-	List<Artwork> searchPublishedArtworks(@Param("search") String search);
+	@Query("SELECT a FROM Artwork a WHERE a.booking.exhibitionStand.exhibitionHallMap.exhibitionEvent.gallery.id = :galleryId AND a.status = :status")
+	List<Artwork> findByGalleryIdAndStatus(@Param("galleryId") Long galleryId, @Param("status") ArtworkStatus status);
 
-	// Проверка, что у художника есть подтвержденное бронирование для произведения
-	@Query("SELECT COUNT(b) > 0 FROM Booking b " + "WHERE b.artist.id = :artistId " + "AND b.id = :bookingId "
-			+ "AND b.status = 'CONFIRMED'")
-	boolean hasConfirmedBooking(@Param("artistId") Long artistId, @Param("bookingId") Long bookingId);
+	@Query("SELECT COUNT(a) > 0 FROM Artwork a WHERE LOWER(a.title) = LOWER(:title) AND a.booking.artist.id = :artistId")
+	boolean existsByTitleAndArtistId(@Param("title") String title, @Param("artistId") Long artistId);
 }

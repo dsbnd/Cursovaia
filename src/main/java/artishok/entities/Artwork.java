@@ -1,5 +1,8 @@
 package artishok.entities;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import artishok.entities.enums.ArtworkStatus;
 import jakarta.persistence.*;
 
@@ -29,8 +32,8 @@ public class Artwork {
 	@Column(name = "image_url", length = 500)
 	private String imageUrl;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
+	@JdbcTypeCode(SqlTypes.NAMED_ENUM)
 	private ArtworkStatus status = ArtworkStatus.DRAFT;
 
 	public Artwork() {

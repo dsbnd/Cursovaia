@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import artishok.entities.Booking;
-import artishok.entities.User;
 import artishok.entities.enums.BookingStatus;
 import artishok.services.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
