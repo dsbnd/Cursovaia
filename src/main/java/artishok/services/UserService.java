@@ -2,60 +2,151 @@ package artishok.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import artishok.entities.User;
 import artishok.entities.enums.UserRole;
 import artishok.repositories.UserRepository;
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
-@Slf4j
 public class UserService {
 	private final UserRepository userRepository;
-	private static final Logger log = LoggerFactory.getLogger(UserService.class); 
+	private final PasswordEncoder passwordEncoder;
 
-	UserService(UserRepository userRepository) {
-
+	UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
 		this.userRepository = userRepository;
 	}
 
-	public List<User> getAllUsers(UserRole role, String search) {
-        log.info("Получение списка пользователей: роль={}, поиск={}", role, search);
-        return userRepository.findUsersByFilters(role, search);
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
+	}
+
+	@Transactional
+	public User createUser(User user, String plainPassword) {
+		if (userRepository.existsByEmail(user.getEmail())) {
+			throw new IllegalArgumentException("Пользователь с таким email уже существует");
+		}
+
+		// Хеширование пароля
+		user.setPasswordHash(passwordEncoder.encode(plainPassword));
+
+		// Установка даты регистрации, если не установлена
+		if (user.getRegistrationDate() == null) {
+			user.setRegistrationDate(LocalDateTime.now());
+		}
+
+		if (user.getIsActive() == null) {
+			user.setIsActive(true);
+		}
+
+		return userRepository.save(user);
+	}
+
+	public Optional<User> getUserById(Long id) {
+		return userRepository.findById(id);
+	}
+
+	public Optional<User> getUserByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
+	// Обновление пользователя
+	@Transactional
+	public User updateUser(Long id, User updatedUser) {
+		return userRepository.findById(id).map(existingUser -> {
+			// Обновляем только разрешенные поля
+			if (updatedUser.getFullName() != null) {
+				existingUser.setFullName(updatedUser.getFullName());
+			}
+			if (updatedUser.getPhoneNumber() != null) {
+				existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+			}
+			if (updatedUser.getBio() != null) {
+				existingUser.setBio(updatedUser.getBio());
+			}
+			if (updatedUser.getAvatarUrl() != null) {
+				existingUser.setAvatarUrl(updatedUser.getAvatarUrl());
+			}
+			if (updatedUser.getIsActive() != null) {
+				existingUser.setIsActive(updatedUser.getIsActive());
+			}
+
+			// Роль и email обычно не изменяются через этот метод
+			// Для их изменения нужны отдельные методы с проверкой прав
+
+			return userRepository.save(existingUser);
+		}).orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+	}
+
+	// Удаление пользователя (мягкое удаление - деактивация)
+	@Transactional
+	public void deactivateUser(Long id) {
+		userRepository.findById(id).ifPresent(user -> {
+			user.setIsActive(false);
+			userRepository.save(user);
+		});
+	}
+
+	// Активация пользователя
+	@Transactional
+	public void activateUser(Long id) {
+		userRepository.findById(id).ifPresent(user -> {
+			user.setIsActive(true);
+			userRepository.save(user);
+		});
+	}
+
+	// Получение пользователей по роли
+	public List<User> getUsersByRole(UserRole role) {
+		return userRepository.findByRole(role);
+	}
+	
+	// Получение активных пользователей
+    public List<User> getActiveUsers() {
+        return userRepository.findByIsActiveTrue();
+    }
+    
+    // Поиск пользователей по имени
+    public List<User> searchUsersByName(String name) {
+        return userRepository.findByFullNameContainingIgnoreCase(name);
+    }
+    
+    // Подсчет пользователей по роли
+    public long countUsersByRole(UserRole role) {
+        return userRepository.countByRole(role);
+    }
+    
+    // Получение последних зарегистрированных пользователей
+    public List<User> getRecentlyRegisteredUsers() {
+        return userRepository.findTop10ByOrderByRegistrationDateDesc();
+    }
+    
+    // Смена пароля
+    @Transactional
+    public void changePassword(Long userId, String newPassword) {
+        userRepository.findById(userId)
+                .ifPresent(user -> {
+                    user.setPasswordHash(passwordEncoder.encode(newPassword));
+                    userRepository.save(user);
+                });
+    }
+    
+    // Проверка существования пользователя
+    public boolean userExists(Long id) {
+        return userRepository.existsById(id);
+    }
+    
+    // Проверка существования email
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 	
-//	@Transactional
-//    public User registerUser(UserRegistrationDto registrationDto) {
-//        log.info("Регистрация пользователя: {}", registrationDto.getEmail());
-//        
-//        // Проверка уникальности email
-//        if (userRepository.existsByEmail(registrationDto.getEmail())) {
-//            throw new RuntimeException("Email уже используется");
-//        }
-//        
-//        // Создание пользователя
-//        User user = new User();
-//        user.setEmail(registrationDto.getEmail());
-//        user.setPasswordHash(passwordEncoder.encode(registrationDto.getPassword()));
-//        user.setFullName(registrationDto.getFullName());
-//        user.setRole(registrationDto.getRole());
-//        user.setPhoneNumber(registrationDto.getPhoneNumber());
-//        user.setRegistrationDate(LocalDateTime.now());
-//        user.setIsActive(true);
-//        
-//        User savedUser = userRepository.save(user);
-//        
-//        // Логирование активности
-//        logUserActivity(savedUser.getId(), "REGISTRATION", 
-//                       "Пользователь зарегистрирован");
-//        
-//        log.info("Пользователь успешно зарегистрирован: ID={}", savedUser.getId());
-//        return savedUser;
-//    }
+	
 
 }

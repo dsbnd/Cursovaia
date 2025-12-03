@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import artishok.entities.enums.BookingStatus;
 
 @Entity
@@ -24,9 +27,9 @@ public class Booking {
     @Column(name = "booking_date")
     private LocalDateTime bookingDate = LocalDateTime.now();
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private BookingStatus status = BookingStatus.PENDING;
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    private BookingStatus status;
     
     public Booking() {}
 

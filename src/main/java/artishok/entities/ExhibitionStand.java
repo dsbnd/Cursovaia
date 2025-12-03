@@ -7,6 +7,9 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import artishok.entities.enums.StandStatus;
 import artishok.entities.enums.StandType;
 
@@ -38,12 +41,12 @@ public class ExhibitionStand {
     @Column(nullable = false)
     private Integer height;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private StandType type;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private StandStatus status = StandStatus.AVAILABLE;
 
 	public Long getId() {
