@@ -39,10 +39,10 @@ public class User implements UserDetails { // UserDetails - интерфейс S
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
-
-	@Column(name = "role", columnDefinition = "user_role")
-	@JdbcTypeCode(SqlTypes.NAMED_ENUM)
-	private UserRole role;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", columnDefinition = "user_role", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    private UserRole role;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -59,13 +59,8 @@ public class User implements UserDetails { // UserDetails - интерфейс S
     @Column(name = "avatar_url", length = 500)
     private String avatarUrl;
 
-<<<<<<< HEAD
-	public User() {
-	};
-=======
     public User() {
     }
->>>>>>> 1a0ec4a (new properties)
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

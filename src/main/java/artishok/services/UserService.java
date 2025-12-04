@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
+
 public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -54,14 +55,14 @@ public class UserService {
         } else {
             user.setIsActive(true);
         }
-        
+
         User savedUser = userRepository.save(user);
-        
+
         // Отправляем email для верификации, если включено
         if (emailVerificationEnabled) {
             emailVerificationService.sendVerificationEmail(savedUser);
         }
-        
+
         return savedUser;
 	}
 
